@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#101827">
+  <title>Mi primera experiencia WebAR</title>
+  <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+  <style>
+    :root { color-scheme: dark; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; font-family: system-ui, sans-serif; background: #101827; }
+    .hud {
+      position: fixed; z-index: 10; top: 0; left: 0; right: 0;
+      padding: max(14px, env(safe-area-inset-top)) 16px 14px;
+      text-align: center; color: #fff; pointer-events: none;
+      background: linear-gradient(#101827eF, #10182700);
+    }
+    .hud h1 { font-size: clamp(18px, 5vw, 25px); margin: 0 0 5px; }
+    .hud p { font-size: 13px; margin: 0; color: #dbeafe; }
+    .status {
+      display: inline-block; margin-top: 8px; padding: 6px 11px; border-radius: 999px;
+      font-size: 12px; font-weight: 700; background: #263449; color: #fff;
+    }
+    .help {
+      position: fixed; z-index: 10; bottom: max(14px, env(safe-area-inset-bottom)); left: 12px; right: 12px;
+      padding: 11px 14px; border-radius: 14px; text-align: center; font-size: 12px;
+      color: #e5e7eb; background: #101827d9; border: 1px solid #ffffff24; pointer-events: none;
+    }
+    a-scene { position: fixed; inset: 0; }
+    .a-enter-vr, .a-enter-ar { display: none !important; }
+  </style>
+</head>
+<body>
+  <header class="hud">
+    <h1>Mi primera experiencia WebAR</h1>
+    <p>Apunta la cámara a la imagen objetivo</p>
+    <span class="status" id="status">Preparando cámara…</span>
+  </header>
+  <div class="help">Permite el acceso a la cámara y apunta a la tarjeta de prueba incluida en el README.</div>
+
+  <a-scene
+    mindar-image="imageTargetSrc: ./assets/targets.mind; autoStart: true; uiLoading: no; uiScanning: yes; uiError: no;"    color-space="sRGB"
+    renderer="colorManagement: true, physicallyCorrectLights"
+    vr-mode-ui="enabled: false"
+    device-orientation-permission-ui="enabled: false"
+    embedded>
+  <a-assets>
+    <a-asset-item
+      id="avatarModel"
+      src="./assets/island.glb">
+    </a-asset-item>
+  </a-assets>
+    <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+    <a-entity mindar-image-target="targetIndex: 0">
+      <a-gltf-model
+        src="#avatarModel"
+        position="0 0 0.1"
+        rotation="0 0 0"
+        scale="5.0 5.0 5.0"
+        animation="property: rotation; to: 0 360 0; dur: 8000; easing: linear; loop: true">
+      </a-gltf-model>
+      <a-ring position="0 0 0.02" rotation="0 0 0" radius-inner="0.42" radius-outer="0.45" color="#36E0C5"
+        animation="property: rotation; to: 0 0 360; dur: 5000; easing: linear; loop: true"></a-ring>
+    </a-entity>
+  </a-scene>
+
+  <script>
+    const statusEl = document.getElementById('status');
+    const sceneEl = document.querySelector('a-scene');
+
+    sceneEl.addEventListener('renderstart', () => {
+      statusEl.textContent = 'Cámara iniciada: busca la imagen';
+    });
+    sceneEl.addEventListener('arReady', () => {
+      statusEl.textContent = 'Lista: apunta a la imagen';
+    });
+    sceneEl.addEventListener('arError', () => {
+      statusEl.textContent = 'No se pudo iniciar AR. Revisa el permiso de cámara.';
+    });
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden && statusEl.textContent.includes('Preparando')) {
+        statusEl.textContent = 'Permite la cámara y busca la imagen';
+      }
+    });
+  </script>
+</body>
+</html>
