@@ -40,31 +40,47 @@
   </header>
   <div class="help">Permite el acceso a la cámara y apunta a la tarjeta de prueba incluida en el README.</div>
 
-  <a-scene
-    mindar-image="imageTargetSrc: ./assets/targets.mind; autoStart: true; uiLoading: no; uiScanning: yes; uiError: no;"    color-space="sRGB"
+
+<a-scene
+    mindar-image="imageTargetSrc: ./assets/targets.mind; autoStart: true; uiLoading: no; uiScanning: yes; uiError: no;"
+    color-space="sRGB"
     renderer="colorManagement: true, physicallyCorrectLights"
     vr-mode-ui="enabled: false"
     device-orientation-permission-ui="enabled: false"
     embedded>
-  <a-assets>
-    <a-asset-item
-      id="avatarModel"
-      src="./assets/island.glb">
-    </a-asset-item>
-  </a-assets>
-    <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
+    <a-assets>
+        <a-asset-item
+            id="avatarModel"
+            src="./assets/island.glb">
+        </a-asset-item>
+    </a-assets>
+
+    <a-camera
+        position="0 0 0"
+        look-controls="enabled: false">
+    </a-camera>
+
     <a-entity mindar-image-target="targetIndex: 0">
-      <a-gltf-model
-        src="#avatarModel"
-        position="0 0 0.1"
-        rotation="0 0 0"
-        scale="1.0 1.0 1.0"
-        animation="property: rotation; to: 0 360 0; dur: 8000; easing: linear; loop: true">
-      </a-gltf-model>
-      <a-ring position="0 0 0.02" rotation="0 0 0" radius-inner="0.42" radius-outer="0.45" color="#36E0C5"
-        animation="property: rotation; to: 0 0 360; dur: 5000; easing: linear; loop: true"></a-ring>
+
+        <a-gltf-model
+            src="#avatarModel"
+            position="0 0 0.1"
+            rotation="0 0 0"
+            scale="1 1 1">
+        </a-gltf-model>
+
+        <a-ring
+            position="0 0 0.02"
+            rotation="0 0 0"
+            radius-inner="0.42"
+            radius-outer="0.45"
+            color="#36E0C5">
+        </a-ring>
+
     </a-entity>
-  </a-scene>
+</a-scene>
+
 
   <script>
     const statusEl = document.getElementById('status');
